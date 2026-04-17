@@ -1,0 +1,11 @@
+conda_env/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.env
+.vscode/
+*.log
+weeztix_test.html
+linktree_test.html
