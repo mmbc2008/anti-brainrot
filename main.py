@@ -9,7 +9,7 @@ async def main():
     MAX_PAGES = int(sys.argv[3])
     print("Starting scrape of: ", BASE_URL)
     page_data = await scrape_site_async(BASE_URL, MAX_CONCURRENCY, MAX_PAGES)
-    print(f"There are {len(page_data)} pages have been scraped.")
+    print(f"There are {len(page_data)} that pages have been scraped.")
     print(page_data)
     
 if __name__ == "__main__":

@@ -9,7 +9,6 @@ class TestScraper(unittest.TestCase):
     with open("weeztix_test.html", "r", encoding="utf-8") as file:
             input_html = file.read()
     
-            
     def test_get_title_from_html(self):
         actual = self.weez_scarper.get_title_from_html(self.input_html)
         expected = " Queens & Kings Night "

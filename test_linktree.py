@@ -1,7 +1,5 @@
 import unittest
 from linktree_scraper import LinktreeScraper
-import asyncio
-from playwright.async_api import async_playwright 
 
 BASE_URL = "https://linktr.ee/chocolatecity"
 
@@ -22,6 +20,7 @@ class TestScraper(unittest.TestCase):
         actual = self.lt_scraper.get_title_from_html(self.input_html)
         expected = "Tickets Queens & Kings Night"
         self.assertEqual(actual, expected)
+        
                  
 
                 

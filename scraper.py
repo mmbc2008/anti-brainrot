@@ -16,36 +16,53 @@ class AsyncScraper(ABC):
         self.session = None                                         
         self.should_stop = False
         self.all_tasks = set()
+        self.source_types = ['weeztix', 'eventbrite', 'weticket']
 
     @abstractmethod
     def get_title_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     @abstractmethod
     def get_date_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     @abstractmethod
     def get_times_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     @abstractmethod
     def get_location_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     @abstractmethod
     def get_organiser_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     @abstractmethod
     def get_category_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     @abstractmethod
     def get_price_from_html(self, html):
         "The child class must implement this"
-        pass
+        
     
+    def get_source_from_url(self, url):
+        for source in self.source_types:
+            if source in url:
+                return source
+            
+    def find_source_from_outgoing_links(self, outgoing_links):
+        sources_found = []
+        found_source = ''
+        for link in outgoing_links:
+            sources_found.append(self.get_source_from_url(link))
+        for source in sources_found:
+            if source is not None:
+                found_source = source
+        return found_source
+    
+        
     def normalize_url(self, url):
         split_url = urlsplit(url.lower().strip('/'))
         return f"{split_url.netloc}{split_url.path}"
@@ -75,6 +92,7 @@ class AsyncScraper(ABC):
             and the data from the html tags as values.
         """
         base_url = self.get_base_url(page_url)
+        outgoing_links = self.get_urls_from_html(html, base_url)
         
         data = {
             'url': page_url,
@@ -84,7 +102,8 @@ class AsyncScraper(ABC):
             'times': self.get_times_from_html(html),
             'organiser name': self.get_organiser_from_html(html),
             'price': self.get_price_from_html(html),
-            'outgoing_links': self.get_urls_from_html(html, base_url),
+            'outgoing_links': outgoing_links,
+            'event_source': self.find_source_from_outgoing_links(outgoing_links)
         }
         return data
         
@@ -156,7 +175,6 @@ class AsyncScraper(ABC):
         """
         try: 
             async with self.session.get(url, headers={"User-Agent": "EventScraper/1.0"}) as response:
-                print(response.status)
                 if response.status >= 400:
                     print(f"Error: HTTP {response.status} for {url}")
                     return None
@@ -165,7 +183,6 @@ class AsyncScraper(ABC):
                     return None
                 else:
                     response_text = await response.text()
-                    print(response_text)
                     return response_text
         except Exception as e:
             print(f"Error fetching {url}: {e}")
@@ -237,6 +254,7 @@ class AsyncScraper(ABC):
         self.max_concurrency = max_con
         await self.scrape_page(self.base_url)
         self.max_pages = max_pages
-        return self.page_data
+        filtered_data = { key: value for key, value in self.page_data.items() if value is not None}
+        return filtered_data
     
     

@@ -1,5 +1,6 @@
 from scraper import AsyncScraper
 from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright
 
 class WeeztixScraper(AsyncScraper):
 
@@ -39,10 +40,6 @@ class WeeztixScraper(AsyncScraper):
         return None
 
     def get_organiser_from_html(self, html):
-        # soup = self._create_soup(html)
-        # header = soup.find('h4', class_='card-heading__content__title').get_text()
-        # organiser = header.split("-")[0]
-        # return organiser
         return None
 
     def get_price_from_html(self, html):
@@ -52,6 +49,30 @@ class WeeztixScraper(AsyncScraper):
             span = div.find_all('span', class_='ot-text-tiny')
             for price in span:
                 return price.get_text()
+            
+    async def __aenter__(self):
+        self.playwright = await async_playwright().start()
+        self.browser = await self.playwright.chromium.launch()
+        return self
+    
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.browser.close()
+        await self.playwright.stop()
+        
+    async def get_html(self, url):
+        try:
+            page = await self.browser.new_page()
+            await page.goto(url)
+            await page.wait_for_load_state("networkidle")
+            response = await page.content()
+            return response
+            
+        except Exception as e:
+            print(f"Error fetching url {url}: {e}.")
+            return None
+        
+        
+        
                 
 
 

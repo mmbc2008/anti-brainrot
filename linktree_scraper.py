@@ -40,10 +40,11 @@ class LinktreeScraper(AsyncScraper):
             scraper_class = self.scrapers[source]
             async with scraper_class(link, self.max_concurrency, self.max_pages) as scraper_instance:
                 await scraper_instance.scrape(self.max_concurrency, self.max_pages)
-                return scraper_instance.page_data.get(data_type)
+                scraper_dict = list(scraper_instance.page_data.values())[0]
+                return scraper_dict.get(data_type)
         else:
             print(f'No scraper available for source {source}.')
-
+    
     def get_category_from_html(self, html):
         return None
         
@@ -62,12 +63,13 @@ class LinktreeScraper(AsyncScraper):
     async def scrape(self, max_con, max_pages):
         await super().scrape(max_con, max_pages)
         event_data = list(self.page_data.values())[0]
-        event_data['date'] = await self.get_outgoing_link_data('data')
+        event_data['date'] = await self.get_outgoing_link_data('date')
         event_data['address'] = await self.get_outgoing_link_data('address')
         event_data['price'] = await self.get_outgoing_link_data('price')
         event_data['times'] = await self.get_outgoing_link_data('times')
-        
-        return self.page_data
+        event_data['outgoing_links'] = event_data['outgoing_links'][0]
+        filtered_data = { key: value for key, value in self.page_data.items() if value is not None}
+        return filtered_data
     
         
     
