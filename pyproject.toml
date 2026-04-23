@@ -1,0 +1,16 @@
+[project]
+name = "project-anti-brainrot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiohttp>=3.13.5",
+    "beautifulsoup4>=4.14.3",
+    "playwright>=1.58.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]
