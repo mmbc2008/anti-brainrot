@@ -45,8 +45,6 @@ class LinktreeScraper(AsyncScraper):
         else:
             print(f'No scraper available for source {source}.')
     
-    def get_category_from_html(self, html):
-        return None
         
     def get_date_from_html(self, html):
        return None

@@ -17,6 +17,14 @@ class AsyncScraper(ABC):
         self.should_stop = False
         self.all_tasks = set()
         self.source_types = ['weeztix', 'eventbrite', 'weticket']
+        self.HEADERS = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            # "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+        }
 
     @abstractmethod
     def get_title_from_html(self, html):
@@ -36,10 +44,6 @@ class AsyncScraper(ABC):
         
     @abstractmethod
     def get_organiser_from_html(self, html):
-        "The child class must implement this"
-        
-    @abstractmethod
-    def get_category_from_html(self, html):
         "The child class must implement this"
         
     @abstractmethod
@@ -174,7 +178,7 @@ class AsyncScraper(ABC):
                     or error occurred
         """
         try: 
-            async with self.session.get(url, headers={"User-Agent": "EventScraper/1.0"}) as response:
+            async with self.session.get(url, headers=self.HEADERS) as response:
                 if response.status >= 400:
                     print(f"Error: HTTP {response.status} for {url}")
                     return None
