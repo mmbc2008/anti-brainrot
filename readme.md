@@ -1,19 +1,29 @@
+# Anti-Brainrot
+
+Anti-Brainrot is an event aggregator that delivers personalised event updates to your messaging app of choice. Currently shipping a Telegram bot interface; designed to support Signal, and Discord.
+
+
+
+
+
 ## Setup
 
-**For this project (M1/M2 Mac with miniforge):**
+This project uses [uv](https://docs.astral.sh/uv/) for Python package management.
 
 ```bash
-conda create -n anti-brainrot python=3.11
-conda activate anti-brainrot
-pip install -r requirements.txt
+# Install uv if you don't have it
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Clone the repo
+git clone https://github.com/your-actual-username/anti-brainrot.git
+cd anti-brainrot
+
+# Sync dependencies (creates .venv and installs from uv.lock)
+uv sync
+
+# Install Playwright browsers
+uv run playwright install
 ```
+## Why this exists
 
-**Alternative (pip + venv on Intel Mac):**
-
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-**Note:** This project uses miniforge on M1/M2 Macs because conda handles ARM-compatible package binaries better than pip alone.
+I started this project because doomscrolling social media was wrecking my attention and mental health but quitting meant that I lost track of events that I actually cared about. After using [Hestia](https://github.com/wtfloris/hestia) for another use case, I realised a similar model could be used for event discovery, ergo anti-brainrot was born. 
