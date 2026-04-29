@@ -15,7 +15,7 @@ This project uses [uv](https://docs.astral.sh/uv/) for Python package management
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Clone the repo
-git clone https://github.com/your-actual-username/anti-brainrot.git
+git clone https://github.com/mmbc2008/anti-brainrot
 cd anti-brainrot
 
 # Sync dependencies (creates .venv and installs from uv.lock)
