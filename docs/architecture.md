@@ -81,3 +81,34 @@ class LinktreeScraper {
     }
     
 ```
+
+## Database Schema 
+
+```
+erDiagram
+    ORGANISER ||--o{ EVENTS : hosts
+    EVENTS {
+        int id PK
+        string title
+        string location
+        datetime starts_at
+        datetime ends_at
+        string categories
+        float price_from
+        string url UK
+        int organiser_id FK
+        
+    }
+    ORGANISER {
+        int id PK
+        string name
+        datetime last_scraped_at
+        string profile_url
+   
+    }
+    USERS {
+        int chat_id PK
+        string cities
+        string categories
+    }
+```
