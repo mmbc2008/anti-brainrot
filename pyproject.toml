@@ -1,16 +1,26 @@
 [project]
 name = "project-anti-brainrot"
 version = "0.1.0"
-description = "Add your description here"
+description = "This project allows you to get information about your favourite events sent to your phone without doom scrolling."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "aiohttp>=3.13.5",
     "beautifulsoup4>=4.14.3",
+    "curl-cffi>=0.15.0",
+    "httpx>=0.28.1",
+    "logging>=0.4.9.6",
     "playwright>=1.58.0",
+    "psycopg2-binary>=2.9.12",
+    "python-telegram-bot>=22.7",
+    "scrapy>=2.16.0",
+    "scrapy-playwright>=0.0.46",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=8.4.2",
 ]
+
+[tool.setuptools]
+   py-modules = ["db", "event"]

@@ -1,10 +1,16 @@
 # Anti-Brainrot
 
-Anti-Brainrot is an event aggregator that delivers personalised event updates to your messaging app of choice. Currently shipping a Telegram bot interface; designed to support Signal, and Discord.
+Anti-Brainrot is an event aggregator that delivers personalised event updates to your messaging app of choice. Currently shipping a Telegram bot interface; designed to support Signal and Discord.
 
+## Why this exists
 
+I started this project because doomscrolling social media was wrecking my attention and mental health but quitting meant that I lost track of events that I actually cared about. After using [Hestia](https://github.com/wtfloris/hestia) for another use case, I realised a similar model could be used for event discovery, ergo anti-brainrot was born. 
 
+<!-- ## How it works
+Coming soon...
 
+## Tech Stack
+Coming soon... -->
 
 ## Setup
 
@@ -24,6 +30,15 @@ uv sync
 # Install Playwright browsers
 uv run playwright install
 ```
-## Why this exists
 
-I started this project because doomscrolling social media was wrecking my attention and mental health but quitting meant that I lost track of events that I actually cared about. After using [Hestia](https://github.com/wtfloris/hestia) for another use case, I realised a similar model could be used for event discovery, ergo anti-brainrot was born. 
+<!-- ## Roadmap
+
+Coming soon... -->
+
+## Contributing
+
+Contributions are welcome, please see [CONTRIBUTING.md](./CONTRIBUTING.md) to find out how to get involved.
+
+## License
+
+Please see MIT [LICENSE](./LICENSE)

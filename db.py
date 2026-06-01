@@ -1,9 +1,12 @@
 import sqlite3
 from contextlib import contextmanager
+from pathlib import Path
+   
+DB_PATH = Path(__file__).parent / "data" / "bot.db"
 
 @contextmanager
 def get_connection():
-    conn = sqlite3.connect("data/events.db")
+    conn = sqlite3.connect(DB_PATH)
     
     try:
         yield conn
@@ -23,7 +26,18 @@ def init_db(conn):
         name TEXT,
         last_scraped_at TEXT,
         profile_url TEXT);
-    """)
+                    """)
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS leads(
+            id INTEGER PRIMARY KEY,
+            organiser_id INTEGER,
+            url TEXT NOT NULL,
+            vendor TEXT,
+            status TEXT,
+            discovered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(organiser_id) REFERENCES organisers(id));
+                   """)
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS events(

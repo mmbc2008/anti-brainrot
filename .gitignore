@@ -9,3 +9,8 @@ __pycache__/
 *.log
 weeztix_test.html
 linktree_test.html
+data/
+beta_test.py
+data/
+project_anti_brainrot.egg-info/
+scraper/events.json

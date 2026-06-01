@@ -1,6 +1,6 @@
 import sys
 import asyncio
-from linktree_scraper import scrape_site_async
+from scraper.linktree_scraper import scrape_site_async
 
 
 async def main():
