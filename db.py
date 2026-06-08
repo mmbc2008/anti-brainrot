@@ -25,7 +25,7 @@ def init_db(conn):
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         last_scraped_at TEXT,
-        profile_url TEXT);
+        profile_url TEXT UNIQUE);
                     """)
     
     cursor.execute("""
