@@ -51,6 +51,7 @@ def init_db(conn):
         url TEXT UNIQUE NOT NULL,
         organiser_id INTEGER,
         created_at TEXT,
+        notified INTEGER DEFAULT 0,
         FOREIGN KEY (organiser_id) REFERENCES organisers(id)
         );
     """)

@@ -14,3 +14,5 @@ beta_test.py
 data/
 project_anti_brainrot.egg-info/
 scraper/events.json
+.env
+scraper/scraper/spiders/debug.json

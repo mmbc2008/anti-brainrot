@@ -12,6 +12,7 @@ dependencies = [
     "logging>=0.4.9.6",
     "playwright>=1.58.0",
     "psycopg2-binary>=2.9.12",
+    "python-dotenv>=1.2.2",
     "python-telegram-bot>=22.7",
     "scrapy>=2.16.0",
     "scrapy-playwright>=0.0.46",
