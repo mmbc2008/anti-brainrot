@@ -24,7 +24,10 @@ async def handle_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
 async def handle_notify(update, context):
     await send_new_events()
-    print(f"Found {len(events)} events to send")
+    
+def format_event_text(event):
+    return f"🎉 {event[1]}\n📍 {event[2]}\n📅 {event[3]} - {event[4]}\n💶 {event[6]}\n🔗 {event[7]}"
+    
     
 
 async def send_new_events():
@@ -40,7 +43,8 @@ async def send_new_events():
         with get_connection() as conn:
             cursor = conn.cursor()
             for user in users:
-                text = f"🎉 {event[1]}\n📍 {event[2]}\n📅 {event[3]}\n💶 {event[6]}\n🔗 {event[7]}"
+                print(event)
+                text = format_event_text(event)
                 await bot.send_message(user[0], text)
                 # 3. mark notified = 1
             cursor.execute("UPDATE events SET notified=1 WHERE id=?;", (event[0],))

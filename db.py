@@ -50,7 +50,7 @@ def init_db(conn):
         price_from REAL,
         url TEXT UNIQUE NOT NULL,
         organiser_id INTEGER,
-        created_at TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         notified INTEGER DEFAULT 0,
         FOREIGN KEY (organiser_id) REFERENCES organisers(id)
         );

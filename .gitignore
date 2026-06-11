@@ -7,12 +7,6 @@ __pycache__/
 .env
 .vscode/
 *.log
-weeztix_test.html
-linktree_test.html
-data/
-beta_test.py
 data/
 project_anti_brainrot.egg-info/
-scraper/events.json
-.env
-scraper/scraper/spiders/debug.json
+.ruff_cache/

@@ -1,8 +1,10 @@
 import scrapy
-import json
 from db import get_connection
 from scraper.items import ScraperItem
-from scrapy_playwright.page import PageMethod 
+
+
+API_BASE = "https://shop.api.openticket.tech"
+WEEZTIX_SHOP_BASE = "https://shop.weeztix.com"
 
 class WeeztixSpider(scrapy.Spider):
     
@@ -11,34 +13,30 @@ class WeeztixSpider(scrapy.Spider):
     async def start(self):
        with get_connection() as conn:
            cursor = conn.cursor()
-           cursor.execute("SELECT url FROM leads WHERE vendor='weeztix' AND status='pending';")
+           cursor.execute("SELECT url, organiser_id FROM leads WHERE vendor='weeztix' AND status='pending';")
            rows = cursor.fetchall()
-       
-       print(f"DEBUG: row = {rows}")
        for row in rows:
             if row:
-                print(f"DEBUG: yielding {row}")
                 yield scrapy.Request(
                     url=row[0],
                     callback=self.parse,
                     meta={"playwright": True,
-                          "lead_url": row[0]}
-                        #   "playwright_page_methods":[PageMethod("wait_for_selector", "span.subtitle.ot-text-small")]},
+                          "lead_url": row[0],
+                          "organiser_id": row[1]}
                 )
     def parse(self, response):
         guid = response.url.split("/")[3]
-        print(guid)
         yield scrapy.Request(
-            url=f"https://shop.api.openticket.tech/{guid}/data",
+            url=f"{API_BASE}/{guid}/data",
             callback=self.parse_event,
-            meta={"lead_url": response.meta["lead_url"]}
+            meta={"lead_url": response.meta["lead_url"],
+                  "organiser_id": response.meta["organiser_id"]}
         )
         
     def parse_event(self, response):
         data = response.json()
-        # with open("debug.json", "a") as f:
-        #     json.dump(data, f, indent=2)
         event = data['events']
+        guid = response.url.split("/")[3]
         prices = []
         if isinstance(data['tickets'], dict):
             tickets = data['tickets']
@@ -53,9 +51,9 @@ class WeeztixSpider(scrapy.Spider):
                 starts_at=event[0]['start'],
                 ends_at=event[0]['end'],
                 categories=None,
-                organiser_id=None,
-                price_from=str(prices),
-                url=response.url,
+                organiser_id=response.meta['organiser_id'],
+                price_from=prices,
+                url=f"{WEEZTIX_SHOP_BASE}/{guid}/tickets",
                 lead_url=response.meta["lead_url"]
             )
             

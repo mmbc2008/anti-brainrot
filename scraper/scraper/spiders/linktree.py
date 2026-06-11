@@ -14,10 +14,8 @@ class LinktreeSpider(scrapy.Spider):
            cursor.execute("SELECT id, profile_url FROM organisers;")
            rows = cursor.fetchall()
        
-       print(f"DEBUG: row = {rows}")
        for row in rows:
             if row:
-                print(f"DEBUG: yielding {row}")
                 yield scrapy.Request(
                     url=row[1],
                     callback=self.parse,
