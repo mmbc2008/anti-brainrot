@@ -8,7 +8,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 load_dotenv()
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-DB_PATH = Path(__file__).parent / "data" / "bot.db"
+DB_PATH = Path(os.environ.get("DB_PATH", "data/bot.db"))
 
 bot = Bot(TOKEN)
 
