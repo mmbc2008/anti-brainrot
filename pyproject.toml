@@ -25,3 +25,7 @@ dev = [
 
 [tool.setuptools]
    py-modules = ["db", "event"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.backends.legacy:build"
