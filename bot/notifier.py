@@ -1,14 +1,12 @@
 import os
-import sqlite3
 from db import get_connection
 from dotenv import load_dotenv
-from pathlib import Path
 from telegram import Bot, Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 load_dotenv()
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-DB_PATH = Path(os.environ.get("DB_PATH", "data/bot.db"))
+DB_URL = os.environ.get("DATABASE_URL")
 
 bot = Bot(TOKEN)
 
@@ -18,7 +16,8 @@ async def handle_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 2. save to users table if not already there
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT OR IGNORE INTO users (chat_id) VALUES (?);", (chat_id,))
+        cursor.execute("""INSERT INTO users (chat_id) VALUES (%s)
+                       ON CONFLICT (chat_id) DO NOTHING;""", (chat_id,))
     # 3. reply to the user
     await context.bot.send_message(chat_id, "Your account has been created.")
     
@@ -47,7 +46,7 @@ async def send_new_events():
                 text = format_event_text(event)
                 await bot.send_message(user[0], text)
                 # 3. mark notified = 1
-            cursor.execute("UPDATE events SET notified=1 WHERE id=?;", (event[0],))
+            cursor.execute("UPDATE events SET notified=1 WHERE id=%s;", (event[0],))
 
 
 if __name__ == "__main__":

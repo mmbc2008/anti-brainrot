@@ -14,7 +14,8 @@ def seed():
         init_db(conn)
         cursor = conn.cursor()
         cursor.executemany(
-            "INSERT OR IGNORE INTO organisers (name, profile_url) VALUES (?, ?);",
+            """INSERT INTO organisers (name, profile_url) VALUES (%s, %s)
+            ON CONFLICT (profile_url) DO NOTHING;""",
             ORGANISERS,
         )
     print(f"Seeded {len(ORGANISERS)} organisers.")

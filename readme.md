@@ -1,6 +1,6 @@
 # Anti-Brainrot
 
-Anti-Brainrot is an event aggregator that delivers personalised event updates to Telegram.
+Anti-Brainrot is an event data pipeline that delivers personalised event updates to your Telegram account.
 
 ## Why this exists
 
@@ -8,7 +8,7 @@ I started this project because doomscrolling social media was wrecking my attent
 
 ## How it works
 
-1. The Linktree spider scrapes event organiser pages and discovers ticketing URLs, saving them as leads in a local SQLite database.
+1. The Linktree spider scrapes event organiser pages and discovers ticketing URLs, saving them as leads in a PostgreSQL database.
 2. The Weeztix spider picks up pending leads, hits the OpenTicket API, and stores event data in the database.
 3. The Telegram bot queries the database for new events and sends them directly to subscribers.
 
@@ -27,8 +27,6 @@ I started this project because doomscrolling social media was wrecking my attent
 - [ ] dbt transformation layer for event data
 - [ ] Prefect/Airflow orchestration to replace manual run order
 - [ ] Filter events by category and location
-- [ ] Signal and Discord bot interfaces
-- [ ] Deploy for 24/7 running on a Linux VPS (Hetzner) / Railway and Fly.io also supported for a quicker setup
 
 ## Contributing
 

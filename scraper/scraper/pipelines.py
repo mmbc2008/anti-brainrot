@@ -1,14 +1,15 @@
 from scrapy.exceptions import DropItem
 from datetime import datetime
 from scraper.items import ScraperItem, LeadsItem
-from db import DB_PATH
-import sqlite3
+import os
+DB_URL = os.environ.get("DATABASE_URL")
+import psycopg2
 
 
 class LeadsPipeline:
     
     def open_spider(self):
-       self.conn = sqlite3.connect(DB_PATH)
+       self.conn = psycopg2.connect(DB_URL)
        
     def close_spider(self):
         self.conn.close()
@@ -20,12 +21,12 @@ class LeadsPipeline:
         if item.get("vendor") is None:
             raise DropItem("No vendor found.")
         else:
-            cursor.execute("SELECT id FROM leads WHERE url=?",(item.get("url"),))
+            cursor.execute("SELECT id FROM leads WHERE url=%s",(item.get("url"),))
             result = cursor.fetchone()
             if result:
                 raise DropItem("Duplicate url found.")
             else:
-                cursor.execute("INSERT INTO leads (organiser_id,url,vendor,status) VALUES ( ?,?,?,? );",
+                cursor.execute("INSERT INTO leads (organiser_id,url,vendor,status) VALUES ( %s,%s,%s,%s );",
                             (item.get("organiser_id"), item.get("url"), item.get("vendor"), item.get("status")))
             self.conn.commit()
             
@@ -43,7 +44,7 @@ def format_prices(prices):
 class EventsPipeline:
     
     def open_spider(self):
-        self.conn = sqlite3.connect(DB_PATH)
+        self.conn = psycopg2.connect(DB_URL)
     
     def close_spider(self):
          self.conn.close()
@@ -53,10 +54,10 @@ class EventsPipeline:
         if not isinstance(item, ScraperItem): return item
         cursor = self.conn.cursor()
         
-        cursor.execute("UPDATE leads SET status='scraped' WHERE url=?", (item.get("lead_url"),))
+        cursor.execute("UPDATE leads SET status='scraped' WHERE url=%s", (item.get("lead_url"),))
         self.conn.commit()
         
-        cursor.execute("SELECT id FROM events WHERE url=?",(item.get("url"),))
+        cursor.execute("SELECT id FROM events WHERE url=%s",(item.get("url"),))
         result = cursor.fetchone()
         if result:
             return item
@@ -67,7 +68,7 @@ class EventsPipeline:
             prices_from = format_prices(item.get("price_from"))
             
             cursor.execute(
-                                "INSERT INTO events (title, location, starts_at, ends_at, categories, price_from, url, organiser_id) VALUES (?,?,?,?,?,?,?,?)",
+                                "INSERT INTO events (title, location, starts_at, ends_at, categories, price_from, url, organiser_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
                                 (
                                     item.get("title"),
                                     item.get("location"),

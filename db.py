@@ -1,13 +1,14 @@
-import sqlite3
+from dotenv import load_dotenv
+load_dotenv()
+import psycopg2
 from contextlib import contextmanager
-from pathlib import Path
 import os
 
-DB_PATH = Path(os.environ.get("DB_PATH", "data/bot.db"))
+DB_URL = os.environ.get("DATABASE_URL")
 
 @contextmanager
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = psycopg2.connect(DB_URL)
     
     try:
         yield conn
@@ -23,7 +24,7 @@ def init_db(conn):
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS organisers(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         name TEXT,
         last_scraped_at TEXT,
         profile_url TEXT UNIQUE);
@@ -31,7 +32,7 @@ def init_db(conn):
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS leads(
-            id INTEGER PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             organiser_id INTEGER,
             url TEXT NOT NULL,
             vendor TEXT,
@@ -42,7 +43,7 @@ def init_db(conn):
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS events(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         title TEXT,
         location TEXT,
         starts_at TEXT,
@@ -59,7 +60,7 @@ def init_db(conn):
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users(
-        chat_id INTEGER PRIMARY KEY,
+        chat_id SERIAL PRIMARY KEY,
         cities TEXT,
         categories TEXT);
     """)
