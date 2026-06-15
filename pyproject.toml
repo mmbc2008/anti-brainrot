@@ -28,4 +28,4 @@ dev = [
 
 [build-system]
 requires = ["setuptools"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
