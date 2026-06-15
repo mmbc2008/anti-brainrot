@@ -49,7 +49,7 @@ def init_db(conn):
         starts_at TEXT,
         ends_at TEXT,
         categories TEXT,
-        price_from REAL,
+        price_from TEXT,
         url TEXT UNIQUE NOT NULL,
         organiser_id INTEGER,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -64,6 +64,13 @@ def init_db(conn):
         cities TEXT,
         categories TEXT);
     """)
+    
+    cursor.execute("""
+        CREATE TABLE notifications (
+        event_id INTEGER,
+        chat_id INTEGER,
+        PRIMARY KEY (event_id, chat_id));
+                   """)
     
     conn.commit()
     

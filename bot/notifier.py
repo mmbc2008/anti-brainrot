@@ -30,23 +30,28 @@ def format_event_text(event):
     
 
 async def send_new_events():
-    # 1. query events WHERE notified = 0
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM events WHERE notified=0;")
-        events = cursor.fetchall()
-    # 2. for each event, send to all users
+    # 1. for each user
         cursor.execute("SELECT chat_id FROM users;")
         users = cursor.fetchall()
-    for event in events:
-        with get_connection() as conn:
-            cursor = conn.cursor()
-            for user in users:
-                print(event)
-                text = format_event_text(event)
-                await bot.send_message(user[0], text)
-                # 3. mark notified = 1
-            cursor.execute("UPDATE events SET notified=1 WHERE id=%s;", (event[0],))
+        
+    #2 For each unseen event
+        for user in users:
+            with get_connection() as conn:
+                cursor = conn.cursor()
+                # 3 Select all event details for the message 
+                cursor.execute("SELECT * FROM events WHERE id NOT IN (SELECT event_id FROM notifications WHERE chat_id = %s);", (user[0],))
+                events = cursor.fetchall()
+                for event in events:
+                    text = format_event_text(event)
+                    await bot.send_message(user[0], text)
+                    # 4. Insert this into notifications
+                    cursor.execute("INSERT INTO notifications (event_id, chat_id) VALUES (%s, %s);", (event[0], user[0]))
+                
+    
+
+                
 
 
 if __name__ == "__main__":
