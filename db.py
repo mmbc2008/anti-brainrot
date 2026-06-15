@@ -60,7 +60,7 @@ def init_db(conn):
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users(
-        chat_id SERIAL PRIMARY KEY,
+        chat_id BIGINT PRIMARY KEY,
         cities TEXT,
         categories TEXT);
     """)
